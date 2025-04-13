@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  postgress:
+    container_name: nest-forum-api
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: nest_forum_db
+      PGDATA: /data/
+    volumes:
+      - /data/pg:/data/postgres
