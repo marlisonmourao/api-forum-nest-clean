@@ -1,0 +1,10 @@
+{
+  "[typescript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "biomejs.biome",
+  },
+  "[prisma]": {
+    "editor.formatOnSave": true
+  },
+  "github.copilot.chat.agent.runTasks": false
+}
