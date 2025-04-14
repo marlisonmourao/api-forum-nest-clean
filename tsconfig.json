@@ -12,10 +12,22 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
+    "strict": true,
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@/*": [
+        "./src/*",
+        "./src/domain/*",
+        "./src/domain/notification/*",
+        "./src/domain/forum/application/repositories",
+        "./src/domain/forum/application/use-cases",
+        "./src/domain/forum/enterprise/*",
+        "./test/*",
+      ]
+    },
   }
 }
