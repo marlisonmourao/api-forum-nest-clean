@@ -31,6 +31,15 @@ Authorization: Bearer {{authToken}}
 
 
 {
-  "title": "What is the capital of France?",
+  "title": "What is the capital of Alemanha?",
   "content": "I would like to know the capital city of France."
 }
+
+### 
+
+# @name fetch_recent_questions
+GET {{baseUrl}}/questions?page=2
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+
