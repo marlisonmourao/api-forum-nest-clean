@@ -1,4 +1,4 @@
-import type { PaginationParams } from '@/core/repositories/paginations-params'
+import type { PaginationParams } from '@/core/repositories/pagination-params'
 import type { AnswerComment } from '@/entities/answer-comment'
 
 export abstract class AnswerCommentRepository {

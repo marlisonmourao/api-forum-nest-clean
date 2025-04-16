@@ -1,4 +1,4 @@
-import type { PaginationParams } from '@/core/repositories/paginations-params'
+import type { PaginationParams } from '@/core/repositories/pagination-params'
 import type { QuestionCommentRepository } from '@/domain/forum/application/repositories/question-comment-repository'
 import type { QuestionComment } from '@/domain/forum/enterprise/entities/question-comment'
 

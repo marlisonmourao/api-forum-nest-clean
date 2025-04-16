@@ -1,5 +1,5 @@
 import { DomainEvents } from '@/core/events/domain-events'
-import type { PaginationParams } from '@/core/repositories/paginations-params'
+import type { PaginationParams } from '@/core/repositories/pagination-params'
 import { QuestionAttachmentRepository } from '@/domain/forum/application/repositories/question-attachments-repository'
 import type { QuestionRepository } from '@/domain/forum/application/repositories/question-repository'
 import type { Question } from '@/domain/forum/enterprise/entities/question'

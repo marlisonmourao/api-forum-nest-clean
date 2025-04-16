@@ -14,7 +14,7 @@ export interface QuestionProps {
   bestAnswerId?: UniqueEntityID
   attachments: QuestionAttachmentList
   createdAt: Date
-  updatedAt?: Date
+  updatedAt?: Date | null
 }
 
 export class Question extends AggregateRoot<QuestionProps> {
@@ -78,7 +78,7 @@ export class Question extends AggregateRoot<QuestionProps> {
     return this.props.createdAt
   }
 
-  get updatedAt(): Date | undefined {
+  get updatedAt(): Date | undefined | null {
     return this.props.updatedAt
   }
 
