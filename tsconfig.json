@@ -29,5 +29,8 @@
         "./test/*",
       ]
     },
+    "types": [
+      "vitest/globals"
+    ]
   }
 }
