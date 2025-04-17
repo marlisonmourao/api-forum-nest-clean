@@ -2,10 +2,12 @@ import { Encrypter } from '@/domain/forum/application/cryptography/encrypter'
 import { HashComparer } from '@/domain/forum/application/cryptography/hash-comparer'
 import { HashGenerator } from '@/domain/forum/application/cryptography/hash-generator'
 import { Module } from '@nestjs/common'
+import { JwtModule } from '@nestjs/jwt'
 import { BcryptHasher } from './bcrypt-hasher'
 import { JwtEncrypter } from './jwt-encrypter'
 
 @Module({
+  imports: [JwtModule],
   providers: [
     {
       provide: Encrypter,
