@@ -19,7 +19,7 @@ type RegisterStudentUseCaseResponse = Either<
 >
 
 @Injectable()
-export class RegisterStudent {
+export class RegisterStudentUseCase {
   constructor(
     private studentRepository: StudentRepository,
     private hashGenerator: HashGenerator
