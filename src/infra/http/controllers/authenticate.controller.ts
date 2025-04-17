@@ -1,5 +1,11 @@
-import { AuthenticateStudentUseCase } from '@/domain/forum/application/use-cases/authenticate-user'
-import { Body, Controller, Post, UsePipes } from '@nestjs/common'
+import { AuthenticateStudentUseCase } from '@/domain/forum/application/use-cases/authenticate-student'
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Post,
+  UsePipes,
+} from '@nestjs/common'
 import { z } from 'zod'
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe'
 
@@ -25,7 +31,7 @@ export class AuthenticateController {
     })
 
     if (result.isLeft()) {
-      throw new Error()
+      throw new BadRequestException(result.value.message)
     }
 
     const { accessToken } = result.value
