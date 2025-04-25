@@ -1,6 +1,6 @@
 import { ConfigService } from '@nestjs/config'
 import { JwtModuleOptions } from '@nestjs/jwt'
-import type { Env } from '../env'
+import type { Env } from '../env/env'
 
 export const getJwtConfig = (
   configService: ConfigService<Env, true>

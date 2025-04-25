@@ -7,7 +7,7 @@ import { HashComparer } from '@/domain/forum/application/cryptography/hash-compa
 import { HashGenerator } from '@/domain/forum/application/cryptography/hash-generator'
 
 import { getJwtConfig } from '../auth/jwt.config'
-import { Env } from '../env'
+import { Env } from '../env/env'
 import { BcryptHasher } from './bcrypt-hasher'
 import { JwtEncrypter } from './jwt-encrypter'
 
