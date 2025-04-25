@@ -2,12 +2,12 @@
 @authToken = {{authenticate.response.body.accessToken}}
 
 # @name create_account
-POST {{baseUrl}}/account
+POST {{baseUrl}}/accounts
 Content-Type: application/json
 
 {
   "name": "John Doe",
-  "email": "johndoe@email.com",
+  "email": "johndoe2@email.com",
   "password": "12345678"
 }
 

@@ -67,16 +67,15 @@ describe('Fetch Recents Questions (E2E)', () => {
 
     const response = await request(app.getHttpServer())
       .get('/questions')
-
       .set('Authorization', `Bearer ${accessToken}`)
 
     expect(response.statusCode).toBe(200)
     expect(response.body).toEqual({
       questions: [
-        expect.objectContaining({ title: 'Question 1' }),
-        expect.objectContaining({ title: 'Question 2' }),
-        expect.objectContaining({ title: 'Question 3' }),
-        expect.objectContaining({ title: 'Question 4' }),
+        expect.objectContaining({ title: 'Question Title 1' }),
+        expect.objectContaining({ title: 'Question Title 2' }),
+        expect.objectContaining({ title: 'Question Title 3' }),
+        expect.objectContaining({ title: 'Question Title 4' }),
       ],
     })
   })
