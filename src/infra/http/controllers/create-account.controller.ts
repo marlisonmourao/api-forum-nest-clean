@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   HttpCode,
@@ -34,7 +35,7 @@ export class CreateAccountController {
     })
 
     if(result.isLeft()) {
-      throw new Error(result.value.message)
+      throw new BadRequestException(result.value.message)
     }
   }
 }
