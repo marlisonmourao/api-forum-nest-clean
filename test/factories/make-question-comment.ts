@@ -33,7 +33,7 @@ export class QuestionCommentFactory {
 
   async makePrismaAnswer(
     data: Partial<QuestionCommentProps> = {}
-  ): Promise<QuestionCommentProps> {
+  ): Promise<QuestionComment> {
     const questionComment = makeQuestionComment(data)
 
     await this.prisma.comment.create({

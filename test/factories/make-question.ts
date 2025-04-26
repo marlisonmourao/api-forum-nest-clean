@@ -9,7 +9,7 @@ import { faker } from '@faker-js/faker'
 import { Injectable } from '@nestjs/common'
 
 export function makeQuestion(
-  override?: Partial<QuestionProps>,
+  override: Partial<QuestionProps> = {},
   id?: UniqueEntityID
 ) {
   const question = Question.create(
