@@ -10,8 +10,6 @@ export class PrismaQuestionAttachmentMapper {
 
     const questionAttachment = QuestionAttachment.create(
       {
-        title: raw.title,
-        url: raw.url,
         attachmentId: new UniqueEntityID(raw.id),
         questionId: new UniqueEntityID(raw.questionId),
       },

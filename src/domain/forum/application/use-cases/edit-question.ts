@@ -58,6 +58,8 @@ export class EditQuestionUseCase {
       return QuestionAttachment.create({
         attachmentId: new UniqueEntityID(attachmentId),
         questionId: question.id,
+        title: question.title,
+        url: question.,
       })
     })
 

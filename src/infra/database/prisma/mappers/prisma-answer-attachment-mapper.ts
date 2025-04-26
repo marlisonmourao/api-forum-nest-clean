@@ -10,8 +10,6 @@ export class PrismaAnswerAttachmentMapper {
 
     const answerAttachment = AnswerAttachment.create(
       {
-        title: raw.title,
-        url: raw.url,
         attachmentId: new UniqueEntityID(raw.id),
         answerId: new UniqueEntityID(raw.answerId),
       },
