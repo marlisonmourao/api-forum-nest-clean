@@ -25,7 +25,7 @@ describe('Fetch Recents Questions (E2E)', () => {
     await app.init()
   })
 
-  test('[POST] /question', async () => {
+  test('[GET] /question', async () => {
     const user = await prisma.user.create({
       data: {
         name: 'John Doe',
