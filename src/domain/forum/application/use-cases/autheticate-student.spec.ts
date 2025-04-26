@@ -1,6 +1,6 @@
 import { FakeEncryptor } from '@/cryptography/faker-encrypter'
 import { FakerHash } from '@/cryptography/faker-hasher'
-import { fakeStudent } from '@/factories/make-student'
+import { makeStudent } from '@/factories/make-student'
 import { InMemoryStudentRepository } from '@/repositories/in-memory-student-repository'
 import { AuthenticateStudentUseCase } from './authenticate-student'
 
@@ -23,7 +23,7 @@ beforeEach(() => {
 
 describe('Authenticate student use case', () => {
   it('should be able to authenticate student', async () => {
-    const student = fakeStudent({
+    const student = makeStudent({
       email: 'john@email.com',
       password: await fakerHasher.hash('123456'),
     })
