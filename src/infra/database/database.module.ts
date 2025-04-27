@@ -1,6 +1,7 @@
 import { AnswerAttachmentRepository } from '@/domain/forum/application/repositories/answer-attachments-repository'
 import { AnswerCommentRepository } from '@/domain/forum/application/repositories/answer-comment-repository'
 import { AnswerRepository } from '@/domain/forum/application/repositories/answer-repository'
+import { AttachmentRepository } from '@/domain/forum/application/repositories/attachment-repository'
 import { QuestionAttachmentRepository } from '@/domain/forum/application/repositories/question-attachments-repository'
 import { QuestionCommentRepository } from '@/domain/forum/application/repositories/question-comment-repository'
 import { QuestionRepository } from '@/domain/forum/application/repositories/question-repository'
@@ -10,6 +11,7 @@ import { PrismaService } from './prisma/prisma.service'
 import { PrismaAnswerAttachmentRepository } from './prisma/repositories/prisma-answer-attachments-repository'
 import { PrismaAnswerCommentRepository } from './prisma/repositories/prisma-answer-comments-repository'
 import { PrismaAnswerRepository } from './prisma/repositories/prisma-answer-repository'
+import { PrismaAttachmentRepository } from './prisma/repositories/prisma-attachment-repository'
 import { PrismaQuestionAttachmentRepository } from './prisma/repositories/prisma-question-attachments-repository'
 import { PrismaQuestionCommentsRepository } from './prisma/repositories/prisma-question-comments-repository'
 import { PrismaQuestionRepository } from './prisma/repositories/prisma-question-repository'
@@ -46,6 +48,10 @@ import { PrismaStudentRepository } from './prisma/repositories/prisma-student-re
       provide: AnswerAttachmentRepository,
       useClass: PrismaAnswerAttachmentRepository,
     },
+    {
+      provide: AttachmentRepository,
+      useClass: PrismaAttachmentRepository,
+    },
   ],
   exports: [
     PrismaService,
@@ -57,6 +63,7 @@ import { PrismaStudentRepository } from './prisma/repositories/prisma-student-re
     AnswerRepository,
     AnswerCommentRepository,
     AnswerAttachmentRepository,
+    AttachmentRepository,
   ],
 })
 export class DatabaseModule {}
