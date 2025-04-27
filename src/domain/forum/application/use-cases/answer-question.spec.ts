@@ -20,7 +20,7 @@ describe('Answer question use case', () => {
     const result = await sut.execute({
       questionId: 'question-1',
       content: 'This is an answer',
-      instructorId: 'author-1',
+      authorId: 'author-1',
       attachmentIds: ['attachment-1', 'attachment-2'],
     })
 
