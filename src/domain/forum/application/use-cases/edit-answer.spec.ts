@@ -74,4 +74,40 @@ describe('Edit answer use case', () => {
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(NotAllowedError)
   })
+
+  it('should sync new and removed attachments when editing a question', async () => {
+    const createAnswer = makeAnswer()
+
+    await inMemoryAnswerRepository.create(createAnswer)
+
+    inMemoryAnswerAttachments.items.push(
+      makeAnswerAttachment({
+        answerId: createAnswer.id,
+        attachmentId: new UniqueEntityID('1'),
+      }),
+      makeAnswerAttachment({
+        answerId: createAnswer.id,
+        attachmentId: new UniqueEntityID('2'),
+      })
+    )
+
+    await sut.execute({
+      authorId: createAnswer.authorId.toString(),
+      content: 'New question content',
+      answerId: createAnswer.id.toString(),
+      attachmentIds: ['1', '3'],
+    })
+
+    expect(inMemoryAnswerAttachments.items).toHaveLength(2)
+    expect(inMemoryAnswerAttachments.items[0].attachmentId.toString()).toEqual(
+      '1'
+    )
+    expect(inMemoryAnswerAttachments.items[0].answerId.toString()).toEqual(
+      createAnswer.id.toString()
+    )
+
+    expect(inMemoryAnswerAttachments.items[1].attachmentId.toString()).toEqual(
+      '3'
+    )
+  })
 })

@@ -16,6 +16,10 @@ export class InMemoryAnswerRepository implements AnswerRepository {
 
     DomainEvents.dispatchEventsForAggregate(answer.id)
 
+    await this.answerAttachmentRepository.createMany(
+      answer.attachments.getNewItems()
+    )
+
     return answer
   }
 
@@ -47,6 +51,14 @@ export class InMemoryAnswerRepository implements AnswerRepository {
     if (itemIndex >= 0) {
       this.items[itemIndex] = answer
     }
+
+    await this.answerAttachmentRepository.createMany(
+      answer.attachments.getNewItems()
+    )
+
+    await this.answerAttachmentRepository.deleteMany(
+      answer.attachments.getRemovedItems()
+    )
 
     DomainEvents.dispatchEventsForAggregate(answer.id)
   }

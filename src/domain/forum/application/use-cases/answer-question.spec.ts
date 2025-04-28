@@ -38,4 +38,16 @@ describe('Answer question use case', () => {
       }),
     ])
   })
+
+  it('should persist attachments when creating a new answer', async () => {
+    const result = await sut.execute({
+      questionId: 'question-1',
+      authorId: 'author-1',
+      content: 'This is a question content',
+      attachmentIds: ['attachment-1', 'attachment-2'],
+    })
+
+    expect(result.isRight()).toBe(true)
+    expect(result.value?.answer).toBeTruthy()
+  })
 })
