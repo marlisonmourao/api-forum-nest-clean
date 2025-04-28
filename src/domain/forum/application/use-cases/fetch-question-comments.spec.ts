@@ -1,53 +1,81 @@
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
-import { makeQuestionComment } from '@/factories/make-question-comment'
+import { FetchQuestionCommentsUseCase } from '@/domain/forum/application/use-cases/fetch-question-comments'
 import { InMemoryQuestionCommentRepository } from '@/repositories/in-memory-question-comment-repository'
-import { FetchQuestionCommentsUseCase } from './fetch-question-comments'
+import { InMemoryStudentRepository } from '@/repositories/in-memory-student-repository'
+import { makeQuestionComment } from 'test/factories/make-question-comment'
+import { makeStudent } from 'test/factories/make-student'
 
-let inMemoryQuestionCommentRepository: InMemoryQuestionCommentRepository
+let inMemoryStudentsRepository: InMemoryStudentRepository
+let inMemoryQuestionCommentsRepository: InMemoryQuestionCommentRepository
 let sut: FetchQuestionCommentsUseCase
 
-beforeEach(() => {
-  inMemoryQuestionCommentRepository = new InMemoryQuestionCommentRepository()
-  sut = new FetchQuestionCommentsUseCase(inMemoryQuestionCommentRepository)
-})
+describe('Fetch Question Comments', () => {
+  beforeEach(() => {
+    inMemoryStudentsRepository = new InMemoryStudentRepository()
+    inMemoryQuestionCommentsRepository = new InMemoryQuestionCommentRepository(
+      inMemoryStudentsRepository
+    )
+    sut = new FetchQuestionCommentsUseCase(inMemoryQuestionCommentsRepository)
+  })
 
-describe('Fetch question questioncomments use case', () => {
   it('should be able to fetch question comments', async () => {
-    await inMemoryQuestionCommentRepository.create(
-      makeQuestionComment({
-        questionId: new UniqueEntityID('question-1'),
-      })
-    )
+    const student = makeStudent({ name: 'John Doe' })
 
-    await inMemoryQuestionCommentRepository.create(
-      makeQuestionComment({
-        questionId: new UniqueEntityID('question-1'),
-      })
-    )
+    inMemoryStudentsRepository.items.push(student)
 
-    await inMemoryQuestionCommentRepository.create(
-      makeQuestionComment({
-        questionId: new UniqueEntityID('question-1'),
-      })
-    )
+    const comment1 = makeQuestionComment({
+      questionId: new UniqueEntityID('question-1'),
+      authorId: student.id,
+    })
+
+    const comment2 = makeQuestionComment({
+      questionId: new UniqueEntityID('question-1'),
+      authorId: student.id,
+    })
+
+    const comment3 = makeQuestionComment({
+      questionId: new UniqueEntityID('question-1'),
+      authorId: student.id,
+    })
+
+    await inMemoryQuestionCommentsRepository.create(comment1)
+    await inMemoryQuestionCommentsRepository.create(comment2)
+    await inMemoryQuestionCommentsRepository.create(comment3)
 
     const result = await sut.execute({
       questionId: 'question-1',
       page: 1,
     })
 
-    expect(result.isRight()).toBe(true)
-    expect(result.value?.questionComments[0].id).toEqual(
-      inMemoryQuestionCommentRepository.items[0].id
+    expect(result.value?.comments).toHaveLength(3)
+    expect(result.value?.comments).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          authorName: 'John Doe',
+          commentId: comment1.id,
+        }),
+        expect.objectContaining({
+          authorName: 'John Doe',
+          commentId: comment2.id,
+        }),
+        expect.objectContaining({
+          authorName: 'John Doe',
+          commentId: comment3.id,
+        }),
+      ])
     )
-    expect(result.value?.questionComments).toHaveLength(3)
   })
 
-  it('should be able to fetch question comments paginated', async () => {
-    for (let i = 0; i < 22; i++) {
-      inMemoryQuestionCommentRepository.create(
+  it('should be able to fetch paginated question comments', async () => {
+    const student = makeStudent({ name: 'John Doe' })
+
+    inMemoryStudentsRepository.items.push(student)
+
+    for (let i = 1; i <= 22; i++) {
+      await inMemoryQuestionCommentsRepository.create(
         makeQuestionComment({
           questionId: new UniqueEntityID('question-1'),
+          authorId: student.id,
         })
       )
     }
@@ -57,7 +85,6 @@ describe('Fetch question questioncomments use case', () => {
       page: 2,
     })
 
-    expect(result.isRight()).toBe(true)
-    expect(result.value?.questionComments).toHaveLength(2)
+    expect(result.value?.comments).toHaveLength(2)
   })
 })
