@@ -47,17 +47,21 @@ export class InMemoryQuestionRepository implements QuestionRepository {
     return questions
   }
 
-  async delete(id: string): Promise<void> {
-    const itemIndex = this.items.findIndex(item => item.id.toString() === id)
+  async delete(question: Question): Promise<void> {
+    const itemIndex = this.items.findIndex(
+      item => item.id.toString() === question.id.toString()
+    )
 
     if (itemIndex >= 0) {
       this.items.splice(itemIndex, 1)
     }
 
-    this.questionAttachmentRepository.deleteManyByQuestionId(id)
+    this.questionAttachmentRepository.deleteManyByQuestionId(
+      question.id.toValue()
+    )
   }
 
-  async save(question: Question): Promise<Question> {
+  async save(question: Question): Promise<void> {
     const itemIndex = this.items.findIndex(
       item => item.id.toString() === question.id.toString()
     )
@@ -75,8 +79,6 @@ export class InMemoryQuestionRepository implements QuestionRepository {
     )
 
     DomainEvents.dispatchEventsForAggregate(question.id)
-
-    return question
   }
 
   async findManyRecent({ page }: PaginationParams) {

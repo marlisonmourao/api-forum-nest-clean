@@ -3,12 +3,16 @@ import type { QuestionRepository } from '@/domain/forum/application/repositories
 import type { Question } from '@/domain/forum/enterprise/entities/question'
 import { Injectable } from '@nestjs/common'
 
+import { QuestionAttachmentRepository } from '@/domain/forum/application/repositories/question-attachments-repository'
 import { PrismaQuestionMapper } from '../mappers/prisma-question-mapper'
 import { PrismaService } from '../prisma.service'
 
 @Injectable()
 export class PrismaQuestionRepository implements QuestionRepository {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private questionAttachmentRepository: QuestionAttachmentRepository
+  ) {}
 
   async create(question: Question): Promise<Question> {
     const data = PrismaQuestionMapper.toPrisma(question)
@@ -17,20 +21,30 @@ export class PrismaQuestionRepository implements QuestionRepository {
       data,
     })
 
+    await this.questionAttachmentRepository.createMany(
+      question.attachments.getItems()
+    )
+
     return PrismaQuestionMapper.toDomain(createdQuestion)
   }
 
-  async save(question: Question): Promise<Question> {
+  async save(question: Question): Promise<void> {
     const data = PrismaQuestionMapper.toPrisma(question)
 
-    const updatedQuestion = await this.prisma.question.update({
-      where: {
-        id: data.id,
-      },
-      data,
-    })
-
-    return PrismaQuestionMapper.toDomain(updatedQuestion)
+    await Promise.all([
+      this.prisma.question.update({
+        where: {
+          id: data.id,
+        },
+        data,
+      }),
+      this.questionAttachmentRepository.createMany(
+        question.attachments.getNewItems()
+      ),
+      this.questionAttachmentRepository.deleteMany(
+        question.attachments.getRemovedItems()
+      ),
+    ])
   }
 
   async findManyRecent({ page }: PaginationParams): Promise<Question[]> {
@@ -73,10 +87,10 @@ export class PrismaQuestionRepository implements QuestionRepository {
     return PrismaQuestionMapper.toDomain(question)
   }
 
-  async delete(id: string): Promise<void> {
+  async delete(question: Question): Promise<void> {
     await this.prisma.question.delete({
       where: {
-        id,
+        id: question.id.toString(),
       },
     })
   }
