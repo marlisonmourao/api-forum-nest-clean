@@ -9,7 +9,7 @@ import { faker } from '@faker-js/faker'
 import { Injectable } from '@nestjs/common'
 
 export function makeAttachment(
-  override?: Partial<AttachmentProps>,
+  override: Partial<AttachmentProps> = {},
   id?: UniqueEntityID
 ) {
   const attachment = Attachment.create(

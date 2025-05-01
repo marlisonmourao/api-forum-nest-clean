@@ -1,13 +1,18 @@
 import { makeAnswerComment } from '@/factories/make-answer-comment'
 import { InMemoryAnswerCommentRepository } from '@/repositories/in-memory-answer-comment-repository'
+import { InMemoryStudentRepository } from '@/repositories/in-memory-student-repository'
 import { NotAllowedError } from '../../../../core/errors/errors/not-allowed-error'
 import { DeleteAnswerCommentUseCase } from './delete-answer-comment'
 
 let inMemoryAnswerCommentRepository: InMemoryAnswerCommentRepository
+let inMemoryStudentRepository: InMemoryStudentRepository
 let sut: DeleteAnswerCommentUseCase
 
 beforeEach(() => {
-  inMemoryAnswerCommentRepository = new InMemoryAnswerCommentRepository()
+  inMemoryStudentRepository = new InMemoryStudentRepository()
+  inMemoryAnswerCommentRepository = new InMemoryAnswerCommentRepository(
+    inMemoryStudentRepository
+  )
   sut = new DeleteAnswerCommentUseCase(inMemoryAnswerCommentRepository)
 })
 
