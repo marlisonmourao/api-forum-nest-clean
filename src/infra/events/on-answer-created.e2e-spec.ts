@@ -1,3 +1,4 @@
+import { DomainEvents } from '@/core/events/domain-events'
 import { QuestionFactory } from '@/factories/make-question'
 import { StudentFactory } from '@/factories/make-student'
 import { AppModule } from '@/infra/app.module'
@@ -29,6 +30,8 @@ describe('On Answer Created (E2E)', () => {
     studentFactory = moduleRef.get(StudentFactory)
     questionFactory = moduleRef.get(QuestionFactory)
     jwt = moduleRef.get(JwtService)
+
+    DomainEvents.shouldRun = true
 
     await app.init()
   })

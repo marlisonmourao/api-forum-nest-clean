@@ -1,3 +1,4 @@
+import { DomainEvents } from '@/core/events/domain-events'
 import { AnswerFactory } from '@/factories/make-answer'
 import { QuestionFactory } from '@/factories/make-question'
 import { StudentFactory } from '@/factories/make-student'
@@ -32,6 +33,8 @@ describe('On Question best answer chosen (E2E)', () => {
     questionFactory = moduleRef.get(QuestionFactory)
     answerFactory = moduleRef.get(AnswerFactory)
     jwt = moduleRef.get(JwtService)
+
+    DomainEvents.shouldRun = true
 
     await app.init()
   })
