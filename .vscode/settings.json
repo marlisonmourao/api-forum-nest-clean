@@ -6,5 +6,6 @@
   "[prisma]": {
     "editor.formatOnSave": true
   },
-  "github.copilot.chat.agent.runTasks": false
+  "github.copilot.chat.agent.runTasks": false,
+  "vitest.disableWorkspaceWarning": true
 }
