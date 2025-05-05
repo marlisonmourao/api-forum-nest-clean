@@ -1,3 +1,4 @@
+import { DomainEvents } from '@/core/events/domain-events'
 import type { PaginationParams } from '@/core/repositories/pagination-params'
 import { AnswerAttachmentRepository } from '@/domain/forum/application/repositories/answer-attachments-repository'
 import type { AnswerRepository } from '@/domain/forum/application/repositories/answer-repository'
@@ -23,6 +24,8 @@ export class PrismaAnswerRepository implements AnswerRepository {
     await this.answerAttachmentRepository.createMany(
       answer.attachments.getItems()
     )
+
+    DomainEvents.dispatchEventsForAggregate(answer.id)
 
     return answer
   }
@@ -84,5 +87,7 @@ export class PrismaAnswerRepository implements AnswerRepository {
         answer.attachments.getRemovedItems()
       ),
     ])
+
+    DomainEvents.dispatchEventsForAggregate(answer.id)
   }
 }

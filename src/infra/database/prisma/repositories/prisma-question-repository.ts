@@ -3,6 +3,7 @@ import type { QuestionRepository } from '@/domain/forum/application/repositories
 import type { Question } from '@/domain/forum/enterprise/entities/question'
 import { Injectable } from '@nestjs/common'
 
+import { DomainEvents } from '@/core/events/domain-events'
 import { QuestionAttachmentRepository } from '@/domain/forum/application/repositories/question-attachments-repository'
 import { QuestionDetails } from '@/domain/forum/enterprise/entities/value-objects/question-details'
 import { PrismaQuestionDetailsMapper } from '../mappers/prisma-question-details'
@@ -27,6 +28,8 @@ export class PrismaQuestionRepository implements QuestionRepository {
       question.attachments.getItems()
     )
 
+    DomainEvents.dispatchEventsForAggregate(question.id)
+
     return PrismaQuestionMapper.toDomain(createdQuestion)
   }
 
@@ -47,6 +50,8 @@ export class PrismaQuestionRepository implements QuestionRepository {
         question.attachments.getRemovedItems()
       ),
     ])
+
+    DomainEvents.dispatchEventsForAggregate(question.id)
   }
 
   async findManyRecent({ page }: PaginationParams): Promise<Question[]> {

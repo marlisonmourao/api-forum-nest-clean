@@ -11,5 +11,6 @@ import { DatabaseModule } from '../database/database.module'
     OnQuestionBestAnswerChosen,
     SendNotificationUseCase,
   ],
+  exports: [SendNotificationUseCase],
 })
 export class EventsModule {}
