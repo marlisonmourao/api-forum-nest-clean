@@ -6,6 +6,7 @@ import { Injectable } from '@nestjs/common'
 import { DomainEvents } from '@/core/events/domain-events'
 import { QuestionAttachmentRepository } from '@/domain/forum/application/repositories/question-attachments-repository'
 import { QuestionDetails } from '@/domain/forum/enterprise/entities/value-objects/question-details'
+import { CacheRepository } from '@/infra/cache/cache-repository'
 import { PrismaQuestionDetailsMapper } from '../mappers/prisma-question-details'
 import { PrismaQuestionMapper } from '../mappers/prisma-question-mapper'
 import { PrismaService } from '../prisma.service'
@@ -14,7 +15,8 @@ import { PrismaService } from '../prisma.service'
 export class PrismaQuestionRepository implements QuestionRepository {
   constructor(
     private prisma: PrismaService,
-    private questionAttachmentRepository: QuestionAttachmentRepository
+    private questionAttachmentRepository: QuestionAttachmentRepository,
+    private cacheRepository: CacheRepository
   ) {}
 
   async create(question: Question): Promise<Question> {
@@ -49,6 +51,7 @@ export class PrismaQuestionRepository implements QuestionRepository {
       this.questionAttachmentRepository.deleteMany(
         question.attachments.getRemovedItems()
       ),
+      this.cacheRepository.delete(`questions:${question.slug}:details`),
     ])
 
     DomainEvents.dispatchEventsForAggregate(question.id)
@@ -81,6 +84,12 @@ export class PrismaQuestionRepository implements QuestionRepository {
   }
 
   async findBySlug(slug: string): Promise<Question | null> {
+    const cacheHit = await this.cacheRepository.get(`questions:${slug}:details`)
+
+    if (cacheHit) {
+      return PrismaQuestionMapper.toDomain(JSON.parse(cacheHit))
+    }
+
     const question = await this.prisma.question.findUnique({
       where: {
         slug,
@@ -91,7 +100,14 @@ export class PrismaQuestionRepository implements QuestionRepository {
       return null
     }
 
-    return PrismaQuestionMapper.toDomain(question)
+    const questionDetails = PrismaQuestionMapper.toDomain(question)
+
+    await this.cacheRepository.set(
+      `questions:${slug}:details`,
+      questionDetails.toString()
+    )
+
+    return questionDetails
   }
 
   async findDetailsBySlug(slug: string): Promise<QuestionDetails | null> {
