@@ -86,14 +86,32 @@ describe('Prisma Question Repository (E2E)', () => {
 
     const slug = question.slug.value
 
-    await cacheRepository.set(
-      `questions:${slug}:details`,
-      JSON.stringify({ empty: true })
-    )
+    // await cacheRepository.set(
+    //   `questions:${slug}:details`,
+    //   JSON.stringify({ empty: true })
+    // )
+
+    let cached = await cacheRepository.get(`questions:${slug}:details`)
+
+    expect(cached).toBeNull()
+
+    await questionRepository.findDetailsBySlug(slug)
+
+    cached = await cacheRepository.get(`questions:${slug}:details`)
+
+    expect(cached).not.toBeNull()
+
+    if (!cached) {
+      throw new Error()
+    }
 
     const questionDetails = await questionRepository.findDetailsBySlug(slug)
 
-    expect(questionDetails).toEqual({ empty: true })
+    expect(JSON.parse(cached)).toEqual(
+      expect.objectContaining({
+        id: questionDetails?.questionId.toString(),
+      })
+    )
   })
 
   it('should reset question details cache when the question is updated', async () => {
