@@ -51,7 +51,8 @@ export class PrismaQuestionRepository implements QuestionRepository {
       this.questionAttachmentRepository.deleteMany(
         question.attachments.getRemovedItems()
       ),
-      this.cacheRepository.delete(`questions:${question.slug}:details`),
+
+      this.cacheRepository.delete(`questions:${question.slug.value}:details`),
     ])
 
     DomainEvents.dispatchEventsForAggregate(question.id)
@@ -84,12 +85,6 @@ export class PrismaQuestionRepository implements QuestionRepository {
   }
 
   async findBySlug(slug: string): Promise<Question | null> {
-    const cacheHit = await this.cacheRepository.get(`questions:${slug}:details`)
-
-    if (cacheHit) {
-      return PrismaQuestionMapper.toDomain(JSON.parse(cacheHit))
-    }
-
     const question = await this.prisma.question.findUnique({
       where: {
         slug,
@@ -104,13 +99,19 @@ export class PrismaQuestionRepository implements QuestionRepository {
 
     await this.cacheRepository.set(
       `questions:${slug}:details`,
-      questionDetails.toString()
+      JSON.stringify(questionDetails)
     )
 
     return questionDetails
   }
 
   async findDetailsBySlug(slug: string): Promise<QuestionDetails | null> {
+    const cacheHit = await this.cacheRepository.get(`questions:${slug}:details`)
+
+    if (cacheHit) {
+      return JSON.parse(cacheHit)
+    }
+
     const question = await this.prisma.question.findUnique({
       where: {
         slug,
